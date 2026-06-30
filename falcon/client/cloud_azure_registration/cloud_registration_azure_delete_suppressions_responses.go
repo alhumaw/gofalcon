@@ -6,8 +6,10 @@ package cloud_azure_registration
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -83,6 +85,8 @@ type CloudRegistrationAzureDeleteSuppressionsOK struct {
 	/* The number of requests remaining for the sliding one minute window.
 	 */
 	XRateLimitRemaining int64
+
+	Payload *CloudRegistrationAzureDeleteSuppressionsOKBody
 }
 
 // IsSuccess returns true when this cloud registration azure delete suppressions o k response has a 2xx status code
@@ -116,11 +120,15 @@ func (o *CloudRegistrationAzureDeleteSuppressionsOK) Code() int {
 }
 
 func (o *CloudRegistrationAzureDeleteSuppressionsOK) Error() string {
-	return fmt.Sprintf("[DELETE /cloud-security-registration-azure/entities/issue-suppressions/v1][%d] cloudRegistrationAzureDeleteSuppressionsOK ", 200)
+	return fmt.Sprintf("[DELETE /cloud-security-registration-azure/entities/issue-suppressions/v1][%d] cloudRegistrationAzureDeleteSuppressionsOK  %+v", 200, o.Payload)
 }
 
 func (o *CloudRegistrationAzureDeleteSuppressionsOK) String() string {
-	return fmt.Sprintf("[DELETE /cloud-security-registration-azure/entities/issue-suppressions/v1][%d] cloudRegistrationAzureDeleteSuppressionsOK ", 200)
+	return fmt.Sprintf("[DELETE /cloud-security-registration-azure/entities/issue-suppressions/v1][%d] cloudRegistrationAzureDeleteSuppressionsOK  %+v", 200, o.Payload)
+}
+
+func (o *CloudRegistrationAzureDeleteSuppressionsOK) GetPayload() *CloudRegistrationAzureDeleteSuppressionsOKBody {
+	return o.Payload
 }
 
 func (o *CloudRegistrationAzureDeleteSuppressionsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -152,6 +160,13 @@ func (o *CloudRegistrationAzureDeleteSuppressionsOK) readResponse(response runti
 			return errors.InvalidType("X-RateLimit-Remaining", "header", "int64", hdrXRateLimitRemaining)
 		}
 		o.XRateLimitRemaining = valxRateLimitRemaining
+	}
+
+	o.Payload = new(CloudRegistrationAzureDeleteSuppressionsOKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
 	}
 
 	return nil
@@ -609,5 +624,166 @@ func (o *CloudRegistrationAzureDeleteSuppressionsInternalServerError) readRespon
 		return err
 	}
 
+	return nil
+}
+
+/*
+CloudRegistrationAzureDeleteSuppressionsOKBody cloud registration azure delete suppressions o k body
+swagger:model CloudRegistrationAzureDeleteSuppressionsOKBody
+*/
+type CloudRegistrationAzureDeleteSuppressionsOKBody struct {
+
+	// errors
+	Errors []*models.MsaAPIError `json:"errors"`
+
+	// meta
+	Meta *models.MsaMetaInfo `json:"meta,omitempty"`
+
+	// resources
+	Resources []interface{} `json:"resources"`
+}
+
+// Validate validates this cloud registration azure delete suppressions o k body
+func (o *CloudRegistrationAzureDeleteSuppressionsOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateMeta(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *CloudRegistrationAzureDeleteSuppressionsOKBody) validateErrors(formats strfmt.Registry) error {
+	if swag.IsZero(o.Errors) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Errors); i++ {
+		if swag.IsZero(o.Errors[i]) { // not required
+			continue
+		}
+
+		if o.Errors[i] != nil {
+			if err := o.Errors[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("cloudRegistrationAzureDeleteSuppressionsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("cloudRegistrationAzureDeleteSuppressionsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *CloudRegistrationAzureDeleteSuppressionsOKBody) validateMeta(formats strfmt.Registry) error {
+	if swag.IsZero(o.Meta) { // not required
+		return nil
+	}
+
+	if o.Meta != nil {
+		if err := o.Meta.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("cloudRegistrationAzureDeleteSuppressionsOK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("cloudRegistrationAzureDeleteSuppressionsOK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this cloud registration azure delete suppressions o k body based on the context it is used
+func (o *CloudRegistrationAzureDeleteSuppressionsOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateErrors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateMeta(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *CloudRegistrationAzureDeleteSuppressionsOKBody) contextValidateErrors(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Errors); i++ {
+
+		if o.Errors[i] != nil {
+
+			if swag.IsZero(o.Errors[i]) { // not required
+				return nil
+			}
+
+			if err := o.Errors[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("cloudRegistrationAzureDeleteSuppressionsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("cloudRegistrationAzureDeleteSuppressionsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *CloudRegistrationAzureDeleteSuppressionsOKBody) contextValidateMeta(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Meta != nil {
+
+		if swag.IsZero(o.Meta) { // not required
+			return nil
+		}
+
+		if err := o.Meta.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("cloudRegistrationAzureDeleteSuppressionsOK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("cloudRegistrationAzureDeleteSuppressionsOK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *CloudRegistrationAzureDeleteSuppressionsOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *CloudRegistrationAzureDeleteSuppressionsOKBody) UnmarshalBinary(b []byte) error {
+	var res CloudRegistrationAzureDeleteSuppressionsOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

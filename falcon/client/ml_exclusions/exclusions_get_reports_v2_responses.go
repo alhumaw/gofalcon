@@ -6,8 +6,10 @@ package ml_exclusions
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -77,6 +79,8 @@ type ExclusionsGetReportsV2OK struct {
 	/* The number of requests remaining for the sliding one minute window.
 	 */
 	XRateLimitRemaining int64
+
+	Payload *ExclusionsGetReportsV2OKBody
 }
 
 // IsSuccess returns true when this exclusions get reports v2 o k response has a 2xx status code
@@ -110,11 +114,15 @@ func (o *ExclusionsGetReportsV2OK) Code() int {
 }
 
 func (o *ExclusionsGetReportsV2OK) Error() string {
-	return fmt.Sprintf("[POST /exclusions/entities/exclusions/reports/v2][%d] exclusionsGetReportsV2OK ", 200)
+	return fmt.Sprintf("[POST /exclusions/entities/exclusions/reports/v2][%d] exclusionsGetReportsV2OK  %+v", 200, o.Payload)
 }
 
 func (o *ExclusionsGetReportsV2OK) String() string {
-	return fmt.Sprintf("[POST /exclusions/entities/exclusions/reports/v2][%d] exclusionsGetReportsV2OK ", 200)
+	return fmt.Sprintf("[POST /exclusions/entities/exclusions/reports/v2][%d] exclusionsGetReportsV2OK  %+v", 200, o.Payload)
+}
+
+func (o *ExclusionsGetReportsV2OK) GetPayload() *ExclusionsGetReportsV2OKBody {
+	return o.Payload
 }
 
 func (o *ExclusionsGetReportsV2OK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -146,6 +154,13 @@ func (o *ExclusionsGetReportsV2OK) readResponse(response runtime.ClientResponse,
 			return errors.InvalidType("X-RateLimit-Remaining", "header", "int64", hdrXRateLimitRemaining)
 		}
 		o.XRateLimitRemaining = valxRateLimitRemaining
+	}
+
+	o.Payload = new(ExclusionsGetReportsV2OKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
 	}
 
 	return nil
@@ -493,5 +508,166 @@ func (o *ExclusionsGetReportsV2InternalServerError) readResponse(response runtim
 		return err
 	}
 
+	return nil
+}
+
+/*
+ExclusionsGetReportsV2OKBody exclusions get reports v2 o k body
+swagger:model ExclusionsGetReportsV2OKBody
+*/
+type ExclusionsGetReportsV2OKBody struct {
+
+	// errors
+	Errors []*models.MsaAPIError `json:"errors"`
+
+	// meta
+	Meta *models.MsaMetaInfo `json:"meta,omitempty"`
+
+	// resources
+	Resources []interface{} `json:"resources"`
+}
+
+// Validate validates this exclusions get reports v2 o k body
+func (o *ExclusionsGetReportsV2OKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateMeta(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *ExclusionsGetReportsV2OKBody) validateErrors(formats strfmt.Registry) error {
+	if swag.IsZero(o.Errors) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Errors); i++ {
+		if swag.IsZero(o.Errors[i]) { // not required
+			continue
+		}
+
+		if o.Errors[i] != nil {
+			if err := o.Errors[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("exclusionsGetReportsV2OK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("exclusionsGetReportsV2OK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *ExclusionsGetReportsV2OKBody) validateMeta(formats strfmt.Registry) error {
+	if swag.IsZero(o.Meta) { // not required
+		return nil
+	}
+
+	if o.Meta != nil {
+		if err := o.Meta.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("exclusionsGetReportsV2OK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("exclusionsGetReportsV2OK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this exclusions get reports v2 o k body based on the context it is used
+func (o *ExclusionsGetReportsV2OKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateErrors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateMeta(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *ExclusionsGetReportsV2OKBody) contextValidateErrors(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Errors); i++ {
+
+		if o.Errors[i] != nil {
+
+			if swag.IsZero(o.Errors[i]) { // not required
+				return nil
+			}
+
+			if err := o.Errors[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("exclusionsGetReportsV2OK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("exclusionsGetReportsV2OK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *ExclusionsGetReportsV2OKBody) contextValidateMeta(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Meta != nil {
+
+		if swag.IsZero(o.Meta) { // not required
+			return nil
+		}
+
+		if err := o.Meta.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("exclusionsGetReportsV2OK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("exclusionsGetReportsV2OK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *ExclusionsGetReportsV2OKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *ExclusionsGetReportsV2OKBody) UnmarshalBinary(b []byte) error {
+	var res ExclusionsGetReportsV2OKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

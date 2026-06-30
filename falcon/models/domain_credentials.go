@@ -14,21 +14,29 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// DomainCredentials domain credentials
+// DomainCredentials Represents credentials entity
 //
 // swagger:model domain.Credentials
 type DomainCredentials struct {
 
-	// token
+	// Indicates if auto authorize scanners is enabled
 	// Required: true
-	Token *string `json:"token"`
+	AutoAuthorizeScanners *bool `json:"auto_authorize_scanners"`
+
+	// Credential IDs associated with this scan
+	// Required: true
+	Ids []string `json:"ids"`
 }
 
 // Validate validates this domain credentials
 func (m *DomainCredentials) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateToken(formats); err != nil {
+	if err := m.validateAutoAuthorizeScanners(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIds(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -38,9 +46,18 @@ func (m *DomainCredentials) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *DomainCredentials) validateToken(formats strfmt.Registry) error {
+func (m *DomainCredentials) validateAutoAuthorizeScanners(formats strfmt.Registry) error {
 
-	if err := validate.Required("token", "body", m.Token); err != nil {
+	if err := validate.Required("auto_authorize_scanners", "body", m.AutoAuthorizeScanners); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DomainCredentials) validateIds(formats strfmt.Registry) error {
+
+	if err := validate.Required("ids", "body", m.Ids); err != nil {
 		return err
 	}
 

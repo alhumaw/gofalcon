@@ -6,8 +6,10 @@ package a_s_p_m
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -101,6 +103,8 @@ type DeleteTagsOK struct {
 	/* The number of requests remaining for the sliding one minute window.
 	 */
 	XRateLimitRemaining int64
+
+	Payload *DeleteTagsOKBody
 }
 
 // IsSuccess returns true when this delete tags o k response has a 2xx status code
@@ -134,11 +138,15 @@ func (o *DeleteTagsOK) Code() int {
 }
 
 func (o *DeleteTagsOK) Error() string {
-	return fmt.Sprintf("[POST /aspm-api-gateway/api/v1/tags][%d] deleteTagsOK ", 200)
+	return fmt.Sprintf("[POST /aspm-api-gateway/api/v1/tags][%d] deleteTagsOK  %+v", 200, o.Payload)
 }
 
 func (o *DeleteTagsOK) String() string {
-	return fmt.Sprintf("[POST /aspm-api-gateway/api/v1/tags][%d] deleteTagsOK ", 200)
+	return fmt.Sprintf("[POST /aspm-api-gateway/api/v1/tags][%d] deleteTagsOK  %+v", 200, o.Payload)
+}
+
+func (o *DeleteTagsOK) GetPayload() *DeleteTagsOKBody {
+	return o.Payload
 }
 
 func (o *DeleteTagsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -172,6 +180,13 @@ func (o *DeleteTagsOK) readResponse(response runtime.ClientResponse, consumer ru
 		o.XRateLimitRemaining = valxRateLimitRemaining
 	}
 
+	o.Payload = new(DeleteTagsOKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
 	return nil
 }
 
@@ -198,6 +213,8 @@ type DeleteTagsCreated struct {
 	/* The number of requests remaining for the sliding one minute window.
 	 */
 	XRateLimitRemaining int64
+
+	Payload *DeleteTagsCreatedBody
 }
 
 // IsSuccess returns true when this delete tags created response has a 2xx status code
@@ -231,11 +248,15 @@ func (o *DeleteTagsCreated) Code() int {
 }
 
 func (o *DeleteTagsCreated) Error() string {
-	return fmt.Sprintf("[POST /aspm-api-gateway/api/v1/tags][%d] deleteTagsCreated ", 201)
+	return fmt.Sprintf("[POST /aspm-api-gateway/api/v1/tags][%d] deleteTagsCreated  %+v", 201, o.Payload)
 }
 
 func (o *DeleteTagsCreated) String() string {
-	return fmt.Sprintf("[POST /aspm-api-gateway/api/v1/tags][%d] deleteTagsCreated ", 201)
+	return fmt.Sprintf("[POST /aspm-api-gateway/api/v1/tags][%d] deleteTagsCreated  %+v", 201, o.Payload)
+}
+
+func (o *DeleteTagsCreated) GetPayload() *DeleteTagsCreatedBody {
+	return o.Payload
 }
 
 func (o *DeleteTagsCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -267,6 +288,13 @@ func (o *DeleteTagsCreated) readResponse(response runtime.ClientResponse, consum
 			return errors.InvalidType("X-RateLimit-Remaining", "header", "int64", hdrXRateLimitRemaining)
 		}
 		o.XRateLimitRemaining = valxRateLimitRemaining
+	}
+
+	o.Payload = new(DeleteTagsCreatedBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
 	}
 
 	return nil
@@ -944,5 +972,327 @@ func (o *DeleteTagsServiceUnavailable) readResponse(response runtime.ClientRespo
 		return err
 	}
 
+	return nil
+}
+
+/*
+DeleteTagsCreatedBody delete tags created body
+swagger:model DeleteTagsCreatedBody
+*/
+type DeleteTagsCreatedBody struct {
+
+	// errors
+	Errors []*models.MsaAPIError `json:"errors"`
+
+	// meta
+	Meta *models.MsaMetaInfo `json:"meta,omitempty"`
+
+	// resources
+	Resources []interface{} `json:"resources"`
+}
+
+// Validate validates this delete tags created body
+func (o *DeleteTagsCreatedBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateMeta(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *DeleteTagsCreatedBody) validateErrors(formats strfmt.Registry) error {
+	if swag.IsZero(o.Errors) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Errors); i++ {
+		if swag.IsZero(o.Errors[i]) { // not required
+			continue
+		}
+
+		if o.Errors[i] != nil {
+			if err := o.Errors[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("deleteTagsCreated" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("deleteTagsCreated" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *DeleteTagsCreatedBody) validateMeta(formats strfmt.Registry) error {
+	if swag.IsZero(o.Meta) { // not required
+		return nil
+	}
+
+	if o.Meta != nil {
+		if err := o.Meta.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("deleteTagsCreated" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("deleteTagsCreated" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this delete tags created body based on the context it is used
+func (o *DeleteTagsCreatedBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateErrors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateMeta(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *DeleteTagsCreatedBody) contextValidateErrors(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Errors); i++ {
+
+		if o.Errors[i] != nil {
+
+			if swag.IsZero(o.Errors[i]) { // not required
+				return nil
+			}
+
+			if err := o.Errors[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("deleteTagsCreated" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("deleteTagsCreated" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *DeleteTagsCreatedBody) contextValidateMeta(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Meta != nil {
+
+		if swag.IsZero(o.Meta) { // not required
+			return nil
+		}
+
+		if err := o.Meta.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("deleteTagsCreated" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("deleteTagsCreated" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteTagsCreatedBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteTagsCreatedBody) UnmarshalBinary(b []byte) error {
+	var res DeleteTagsCreatedBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+DeleteTagsOKBody delete tags o k body
+swagger:model DeleteTagsOKBody
+*/
+type DeleteTagsOKBody struct {
+
+	// errors
+	Errors []*models.MsaAPIError `json:"errors"`
+
+	// meta
+	Meta *models.MsaMetaInfo `json:"meta,omitempty"`
+
+	// resources
+	Resources []interface{} `json:"resources"`
+}
+
+// Validate validates this delete tags o k body
+func (o *DeleteTagsOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateMeta(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *DeleteTagsOKBody) validateErrors(formats strfmt.Registry) error {
+	if swag.IsZero(o.Errors) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Errors); i++ {
+		if swag.IsZero(o.Errors[i]) { // not required
+			continue
+		}
+
+		if o.Errors[i] != nil {
+			if err := o.Errors[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("deleteTagsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("deleteTagsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *DeleteTagsOKBody) validateMeta(formats strfmt.Registry) error {
+	if swag.IsZero(o.Meta) { // not required
+		return nil
+	}
+
+	if o.Meta != nil {
+		if err := o.Meta.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("deleteTagsOK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("deleteTagsOK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this delete tags o k body based on the context it is used
+func (o *DeleteTagsOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateErrors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateMeta(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *DeleteTagsOKBody) contextValidateErrors(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Errors); i++ {
+
+		if o.Errors[i] != nil {
+
+			if swag.IsZero(o.Errors[i]) { // not required
+				return nil
+			}
+
+			if err := o.Errors[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("deleteTagsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("deleteTagsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *DeleteTagsOKBody) contextValidateMeta(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Meta != nil {
+
+		if swag.IsZero(o.Meta) { // not required
+			return nil
+		}
+
+		if err := o.Meta.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("deleteTagsOK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("deleteTagsOK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteTagsOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteTagsOKBody) UnmarshalBinary(b []byte) error {
+	var res DeleteTagsOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

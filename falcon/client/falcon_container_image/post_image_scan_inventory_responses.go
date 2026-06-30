@@ -6,8 +6,10 @@ package falcon_container_image
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -83,6 +85,8 @@ type PostImageScanInventoryOK struct {
 	/* The number of requests remaining for the sliding one minute window.
 	 */
 	XRateLimitRemaining int64
+
+	Payload *PostImageScanInventoryOKBody
 }
 
 // IsSuccess returns true when this post image scan inventory o k response has a 2xx status code
@@ -116,11 +120,15 @@ func (o *PostImageScanInventoryOK) Code() int {
 }
 
 func (o *PostImageScanInventoryOK) Error() string {
-	return fmt.Sprintf("[POST /image-assessment/entities/image-inventory/v1][%d] postImageScanInventoryOK ", 200)
+	return fmt.Sprintf("[POST /image-assessment/entities/image-inventory/v1][%d] postImageScanInventoryOK  %+v", 200, o.Payload)
 }
 
 func (o *PostImageScanInventoryOK) String() string {
-	return fmt.Sprintf("[POST /image-assessment/entities/image-inventory/v1][%d] postImageScanInventoryOK ", 200)
+	return fmt.Sprintf("[POST /image-assessment/entities/image-inventory/v1][%d] postImageScanInventoryOK  %+v", 200, o.Payload)
+}
+
+func (o *PostImageScanInventoryOK) GetPayload() *PostImageScanInventoryOKBody {
+	return o.Payload
 }
 
 func (o *PostImageScanInventoryOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -152,6 +160,13 @@ func (o *PostImageScanInventoryOK) readResponse(response runtime.ClientResponse,
 			return errors.InvalidType("X-RateLimit-Remaining", "header", "int64", hdrXRateLimitRemaining)
 		}
 		o.XRateLimitRemaining = valxRateLimitRemaining
+	}
+
+	o.Payload = new(PostImageScanInventoryOKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
 	}
 
 	return nil
@@ -583,5 +598,166 @@ func (o *PostImageScanInventoryInternalServerError) readResponse(response runtim
 		o.XRateLimitRemaining = valxRateLimitRemaining
 	}
 
+	return nil
+}
+
+/*
+PostImageScanInventoryOKBody post image scan inventory o k body
+swagger:model PostImageScanInventoryOKBody
+*/
+type PostImageScanInventoryOKBody struct {
+
+	// errors
+	Errors []*models.MsaAPIError `json:"errors"`
+
+	// meta
+	Meta *models.MsaMetaInfo `json:"meta,omitempty"`
+
+	// resources
+	Resources []interface{} `json:"resources"`
+}
+
+// Validate validates this post image scan inventory o k body
+func (o *PostImageScanInventoryOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateMeta(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *PostImageScanInventoryOKBody) validateErrors(formats strfmt.Registry) error {
+	if swag.IsZero(o.Errors) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Errors); i++ {
+		if swag.IsZero(o.Errors[i]) { // not required
+			continue
+		}
+
+		if o.Errors[i] != nil {
+			if err := o.Errors[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("postImageScanInventoryOK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("postImageScanInventoryOK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *PostImageScanInventoryOKBody) validateMeta(formats strfmt.Registry) error {
+	if swag.IsZero(o.Meta) { // not required
+		return nil
+	}
+
+	if o.Meta != nil {
+		if err := o.Meta.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("postImageScanInventoryOK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("postImageScanInventoryOK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this post image scan inventory o k body based on the context it is used
+func (o *PostImageScanInventoryOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateErrors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateMeta(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *PostImageScanInventoryOKBody) contextValidateErrors(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Errors); i++ {
+
+		if o.Errors[i] != nil {
+
+			if swag.IsZero(o.Errors[i]) { // not required
+				return nil
+			}
+
+			if err := o.Errors[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("postImageScanInventoryOK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("postImageScanInventoryOK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *PostImageScanInventoryOKBody) contextValidateMeta(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Meta != nil {
+
+		if swag.IsZero(o.Meta) { // not required
+			return nil
+		}
+
+		if err := o.Meta.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("postImageScanInventoryOK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("postImageScanInventoryOK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *PostImageScanInventoryOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *PostImageScanInventoryOKBody) UnmarshalBinary(b []byte) error {
+	var res PostImageScanInventoryOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

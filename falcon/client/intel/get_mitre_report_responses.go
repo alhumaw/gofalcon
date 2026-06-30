@@ -6,8 +6,10 @@ package intel
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -77,6 +79,8 @@ type GetMitreReportOK struct {
 	/* The number of requests remaining for the sliding one minute window.
 	 */
 	XRateLimitRemaining int64
+
+	Payload *GetMitreReportOKBody
 }
 
 // IsSuccess returns true when this get mitre report o k response has a 2xx status code
@@ -110,11 +114,15 @@ func (o *GetMitreReportOK) Code() int {
 }
 
 func (o *GetMitreReportOK) Error() string {
-	return fmt.Sprintf("[GET /intel/entities/mitre-reports/v1][%d] getMitreReportOK ", 200)
+	return fmt.Sprintf("[GET /intel/entities/mitre-reports/v1][%d] getMitreReportOK  %+v", 200, o.Payload)
 }
 
 func (o *GetMitreReportOK) String() string {
-	return fmt.Sprintf("[GET /intel/entities/mitre-reports/v1][%d] getMitreReportOK ", 200)
+	return fmt.Sprintf("[GET /intel/entities/mitre-reports/v1][%d] getMitreReportOK  %+v", 200, o.Payload)
+}
+
+func (o *GetMitreReportOK) GetPayload() *GetMitreReportOKBody {
+	return o.Payload
 }
 
 func (o *GetMitreReportOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -146,6 +154,13 @@ func (o *GetMitreReportOK) readResponse(response runtime.ClientResponse, consume
 			return errors.InvalidType("X-RateLimit-Remaining", "header", "int64", hdrXRateLimitRemaining)
 		}
 		o.XRateLimitRemaining = valxRateLimitRemaining
+	}
+
+	o.Payload = new(GetMitreReportOKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
 	}
 
 	return nil
@@ -493,5 +508,166 @@ func (o *GetMitreReportInternalServerError) readResponse(response runtime.Client
 		return err
 	}
 
+	return nil
+}
+
+/*
+GetMitreReportOKBody get mitre report o k body
+swagger:model GetMitreReportOKBody
+*/
+type GetMitreReportOKBody struct {
+
+	// errors
+	Errors []*models.MsaAPIError `json:"errors"`
+
+	// meta
+	Meta *models.MsaMetaInfo `json:"meta,omitempty"`
+
+	// resources
+	Resources []interface{} `json:"resources"`
+}
+
+// Validate validates this get mitre report o k body
+func (o *GetMitreReportOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateMeta(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *GetMitreReportOKBody) validateErrors(formats strfmt.Registry) error {
+	if swag.IsZero(o.Errors) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Errors); i++ {
+		if swag.IsZero(o.Errors[i]) { // not required
+			continue
+		}
+
+		if o.Errors[i] != nil {
+			if err := o.Errors[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("getMitreReportOK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("getMitreReportOK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *GetMitreReportOKBody) validateMeta(formats strfmt.Registry) error {
+	if swag.IsZero(o.Meta) { // not required
+		return nil
+	}
+
+	if o.Meta != nil {
+		if err := o.Meta.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getMitreReportOK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getMitreReportOK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this get mitre report o k body based on the context it is used
+func (o *GetMitreReportOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateErrors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateMeta(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *GetMitreReportOKBody) contextValidateErrors(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Errors); i++ {
+
+		if o.Errors[i] != nil {
+
+			if swag.IsZero(o.Errors[i]) { // not required
+				return nil
+			}
+
+			if err := o.Errors[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("getMitreReportOK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("getMitreReportOK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *GetMitreReportOKBody) contextValidateMeta(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Meta != nil {
+
+		if swag.IsZero(o.Meta) { // not required
+			return nil
+		}
+
+		if err := o.Meta.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getMitreReportOK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getMitreReportOK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetMitreReportOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetMitreReportOKBody) UnmarshalBinary(b []byte) error {
+	var res GetMitreReportOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

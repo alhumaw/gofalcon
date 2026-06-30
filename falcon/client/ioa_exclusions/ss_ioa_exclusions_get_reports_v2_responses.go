@@ -6,8 +6,10 @@ package ioa_exclusions
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -77,6 +79,8 @@ type SsIoaExclusionsGetReportsV2OK struct {
 	/* The number of requests remaining for the sliding one minute window.
 	 */
 	XRateLimitRemaining int64
+
+	Payload *SsIoaExclusionsGetReportsV2OKBody
 }
 
 // IsSuccess returns true when this ss ioa exclusions get reports v2 o k response has a 2xx status code
@@ -110,11 +114,15 @@ func (o *SsIoaExclusionsGetReportsV2OK) Code() int {
 }
 
 func (o *SsIoaExclusionsGetReportsV2OK) Error() string {
-	return fmt.Sprintf("[POST /exclusions/entities/ss-ioa-exclusions/reports/v2][%d] ssIoaExclusionsGetReportsV2OK ", 200)
+	return fmt.Sprintf("[POST /exclusions/entities/ss-ioa-exclusions/reports/v2][%d] ssIoaExclusionsGetReportsV2OK  %+v", 200, o.Payload)
 }
 
 func (o *SsIoaExclusionsGetReportsV2OK) String() string {
-	return fmt.Sprintf("[POST /exclusions/entities/ss-ioa-exclusions/reports/v2][%d] ssIoaExclusionsGetReportsV2OK ", 200)
+	return fmt.Sprintf("[POST /exclusions/entities/ss-ioa-exclusions/reports/v2][%d] ssIoaExclusionsGetReportsV2OK  %+v", 200, o.Payload)
+}
+
+func (o *SsIoaExclusionsGetReportsV2OK) GetPayload() *SsIoaExclusionsGetReportsV2OKBody {
+	return o.Payload
 }
 
 func (o *SsIoaExclusionsGetReportsV2OK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -146,6 +154,13 @@ func (o *SsIoaExclusionsGetReportsV2OK) readResponse(response runtime.ClientResp
 			return errors.InvalidType("X-RateLimit-Remaining", "header", "int64", hdrXRateLimitRemaining)
 		}
 		o.XRateLimitRemaining = valxRateLimitRemaining
+	}
+
+	o.Payload = new(SsIoaExclusionsGetReportsV2OKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
 	}
 
 	return nil
@@ -493,5 +508,166 @@ func (o *SsIoaExclusionsGetReportsV2InternalServerError) readResponse(response r
 		return err
 	}
 
+	return nil
+}
+
+/*
+SsIoaExclusionsGetReportsV2OKBody ss ioa exclusions get reports v2 o k body
+swagger:model SsIoaExclusionsGetReportsV2OKBody
+*/
+type SsIoaExclusionsGetReportsV2OKBody struct {
+
+	// errors
+	Errors []*models.MsaAPIError `json:"errors"`
+
+	// meta
+	Meta *models.MsaMetaInfo `json:"meta,omitempty"`
+
+	// resources
+	Resources []interface{} `json:"resources"`
+}
+
+// Validate validates this ss ioa exclusions get reports v2 o k body
+func (o *SsIoaExclusionsGetReportsV2OKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateMeta(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *SsIoaExclusionsGetReportsV2OKBody) validateErrors(formats strfmt.Registry) error {
+	if swag.IsZero(o.Errors) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Errors); i++ {
+		if swag.IsZero(o.Errors[i]) { // not required
+			continue
+		}
+
+		if o.Errors[i] != nil {
+			if err := o.Errors[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("ssIoaExclusionsGetReportsV2OK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("ssIoaExclusionsGetReportsV2OK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *SsIoaExclusionsGetReportsV2OKBody) validateMeta(formats strfmt.Registry) error {
+	if swag.IsZero(o.Meta) { // not required
+		return nil
+	}
+
+	if o.Meta != nil {
+		if err := o.Meta.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ssIoaExclusionsGetReportsV2OK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ssIoaExclusionsGetReportsV2OK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this ss ioa exclusions get reports v2 o k body based on the context it is used
+func (o *SsIoaExclusionsGetReportsV2OKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateErrors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateMeta(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *SsIoaExclusionsGetReportsV2OKBody) contextValidateErrors(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Errors); i++ {
+
+		if o.Errors[i] != nil {
+
+			if swag.IsZero(o.Errors[i]) { // not required
+				return nil
+			}
+
+			if err := o.Errors[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("ssIoaExclusionsGetReportsV2OK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("ssIoaExclusionsGetReportsV2OK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *SsIoaExclusionsGetReportsV2OKBody) contextValidateMeta(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Meta != nil {
+
+		if swag.IsZero(o.Meta) { // not required
+			return nil
+		}
+
+		if err := o.Meta.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ssIoaExclusionsGetReportsV2OK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ssIoaExclusionsGetReportsV2OK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *SsIoaExclusionsGetReportsV2OKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *SsIoaExclusionsGetReportsV2OKBody) UnmarshalBinary(b []byte) error {
+	var res SsIoaExclusionsGetReportsV2OKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

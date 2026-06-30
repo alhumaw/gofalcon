@@ -30,6 +30,10 @@ type ClientOption func(*runtime.ClientOperation)
 
 // ClientService is the interface for Client methods
 type ClientService interface {
+	Empty(params *EmptyParams, opts ...ClientOption) (*OK, error)
+
+	Empty(params *EmptyParams, opts ...ClientOption) (*OK, error)
+
 	DeleteCollectionsV1(params *DeleteCollectionsV1Params, opts ...ClientOption) (*DeleteCollectionsV1OK, error)
 
 	DeleteConfigsV1(params *DeleteConfigsV1Params, opts ...ClientOption) (*DeleteConfigsV1OK, error)
@@ -85,6 +89,82 @@ type ClientService interface {
 	V1StatusGet(params *V1StatusGetParams, opts ...ClientOption) (*V1StatusGetOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
+}
+
+/*
+Empty  API
+*/
+func (a *Client) Empty(params *EmptyParams, opts ...ClientOption) (*OK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewEmptyParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "",
+		Method:             "GET",
+		PathPattern:        "/falcon-complete-dashboards/queries/incidents/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &EmptyReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*OK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for : API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+Empty  API
+*/
+func (a *Client) Empty(params *EmptyParams, opts ...ClientOption) (*OK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewEmptyParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "",
+		Method:             "GET",
+		PathPattern:        "/falcon-complete-dashboards/queries/detects/v1",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &EmptyReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*OK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for : API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*

@@ -20,6 +20,10 @@ import (
 // swagger:model domain.ScanRunConfig
 type DomainScanRunConfig struct {
 
+	// The active check level associated with the template
+	// Enum: [active_check_safe_only,active_check_all]
+	ActiveCheckLevel string `json:"active_check_level,omitempty"`
+
 	// The set of additional TCP ports
 	AdditionalTCPPorts []string `json:"additional_tcp_ports"`
 
@@ -90,6 +94,10 @@ type DomainScanRunConfig struct {
 func (m *DomainScanRunConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateActiveCheckLevel(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validatePortsScanLevel(formats); err != nil {
 		res = append(res, err)
 	}
@@ -137,6 +145,45 @@ func (m *DomainScanRunConfig) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+var domainScanRunConfigTypeActiveCheckLevelPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["active_check_safe_only,active_check_all"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		domainScanRunConfigTypeActiveCheckLevelPropEnum = append(domainScanRunConfigTypeActiveCheckLevelPropEnum, v)
+	}
+}
+
+const (
+
+	// DomainScanRunConfigActiveCheckLevelActiveCheckSafeOnlyActiveCheckAll captures enum value "active_check_safe_only,active_check_all"
+	DomainScanRunConfigActiveCheckLevelActiveCheckSafeOnlyActiveCheckAll string = "active_check_safe_only,active_check_all"
+)
+
+// prop value enum
+func (m *DomainScanRunConfig) validateActiveCheckLevelEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, domainScanRunConfigTypeActiveCheckLevelPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DomainScanRunConfig) validateActiveCheckLevel(formats strfmt.Registry) error {
+	if swag.IsZero(m.ActiveCheckLevel) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateActiveCheckLevelEnum("active_check_level", "body", m.ActiveCheckLevel); err != nil {
+		return err
+	}
+
 	return nil
 }
 

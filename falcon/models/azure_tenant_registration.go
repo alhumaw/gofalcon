@@ -110,6 +110,10 @@ type AzureTenantRegistration struct {
 	// Required: true
 	KeyInfo *AzureClientKeyInfo `json:"key_info"`
 
+	// last healthcheck completed at
+	// Format: date-time
+	LastHealthcheckCompletedAt strfmt.DateTime `json:"last_healthcheck_completed_at,omitempty"`
+
 	// management group ids
 	// Required: true
 	ManagementGroupIds []string `json:"management_group_ids"`
@@ -221,6 +225,10 @@ func (m *AzureTenantRegistration) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateKeyInfo(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLastHealthcheckCompletedAt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -453,6 +461,18 @@ func (m *AzureTenantRegistration) validateKeyInfo(formats strfmt.Registry) error
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *AzureTenantRegistration) validateLastHealthcheckCompletedAt(formats strfmt.Registry) error {
+	if swag.IsZero(m.LastHealthcheckCompletedAt) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("last_healthcheck_completed_at", "body", "date-time", m.LastHealthcheckCompletedAt.String(), formats); err != nil {
+		return err
 	}
 
 	return nil

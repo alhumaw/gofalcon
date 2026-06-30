@@ -6,8 +6,10 @@ package a_s_p_m
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -101,6 +103,8 @@ type UpsertBusinessApplicationsOK struct {
 	/* The number of requests remaining for the sliding one minute window.
 	 */
 	XRateLimitRemaining int64
+
+	Payload *UpsertBusinessApplicationsOKBody
 }
 
 // IsSuccess returns true when this upsert business applications o k response has a 2xx status code
@@ -134,11 +138,15 @@ func (o *UpsertBusinessApplicationsOK) Code() int {
 }
 
 func (o *UpsertBusinessApplicationsOK) Error() string {
-	return fmt.Sprintf("[PUT /aspm-api-gateway/api/v1/business_applications][%d] upsertBusinessApplicationsOK ", 200)
+	return fmt.Sprintf("[PUT /aspm-api-gateway/api/v1/business_applications][%d] upsertBusinessApplicationsOK  %+v", 200, o.Payload)
 }
 
 func (o *UpsertBusinessApplicationsOK) String() string {
-	return fmt.Sprintf("[PUT /aspm-api-gateway/api/v1/business_applications][%d] upsertBusinessApplicationsOK ", 200)
+	return fmt.Sprintf("[PUT /aspm-api-gateway/api/v1/business_applications][%d] upsertBusinessApplicationsOK  %+v", 200, o.Payload)
+}
+
+func (o *UpsertBusinessApplicationsOK) GetPayload() *UpsertBusinessApplicationsOKBody {
+	return o.Payload
 }
 
 func (o *UpsertBusinessApplicationsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -172,6 +180,13 @@ func (o *UpsertBusinessApplicationsOK) readResponse(response runtime.ClientRespo
 		o.XRateLimitRemaining = valxRateLimitRemaining
 	}
 
+	o.Payload = new(UpsertBusinessApplicationsOKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
 	return nil
 }
 
@@ -198,6 +213,8 @@ type UpsertBusinessApplicationsCreated struct {
 	/* The number of requests remaining for the sliding one minute window.
 	 */
 	XRateLimitRemaining int64
+
+	Payload *UpsertBusinessApplicationsCreatedBody
 }
 
 // IsSuccess returns true when this upsert business applications created response has a 2xx status code
@@ -231,11 +248,15 @@ func (o *UpsertBusinessApplicationsCreated) Code() int {
 }
 
 func (o *UpsertBusinessApplicationsCreated) Error() string {
-	return fmt.Sprintf("[PUT /aspm-api-gateway/api/v1/business_applications][%d] upsertBusinessApplicationsCreated ", 201)
+	return fmt.Sprintf("[PUT /aspm-api-gateway/api/v1/business_applications][%d] upsertBusinessApplicationsCreated  %+v", 201, o.Payload)
 }
 
 func (o *UpsertBusinessApplicationsCreated) String() string {
-	return fmt.Sprintf("[PUT /aspm-api-gateway/api/v1/business_applications][%d] upsertBusinessApplicationsCreated ", 201)
+	return fmt.Sprintf("[PUT /aspm-api-gateway/api/v1/business_applications][%d] upsertBusinessApplicationsCreated  %+v", 201, o.Payload)
+}
+
+func (o *UpsertBusinessApplicationsCreated) GetPayload() *UpsertBusinessApplicationsCreatedBody {
+	return o.Payload
 }
 
 func (o *UpsertBusinessApplicationsCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -267,6 +288,13 @@ func (o *UpsertBusinessApplicationsCreated) readResponse(response runtime.Client
 			return errors.InvalidType("X-RateLimit-Remaining", "header", "int64", hdrXRateLimitRemaining)
 		}
 		o.XRateLimitRemaining = valxRateLimitRemaining
+	}
+
+	o.Payload = new(UpsertBusinessApplicationsCreatedBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
 	}
 
 	return nil
@@ -944,5 +972,327 @@ func (o *UpsertBusinessApplicationsServiceUnavailable) readResponse(response run
 		return err
 	}
 
+	return nil
+}
+
+/*
+UpsertBusinessApplicationsCreatedBody upsert business applications created body
+swagger:model UpsertBusinessApplicationsCreatedBody
+*/
+type UpsertBusinessApplicationsCreatedBody struct {
+
+	// errors
+	Errors []*models.MsaAPIError `json:"errors"`
+
+	// meta
+	Meta *models.MsaMetaInfo `json:"meta,omitempty"`
+
+	// resources
+	Resources []interface{} `json:"resources"`
+}
+
+// Validate validates this upsert business applications created body
+func (o *UpsertBusinessApplicationsCreatedBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateMeta(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *UpsertBusinessApplicationsCreatedBody) validateErrors(formats strfmt.Registry) error {
+	if swag.IsZero(o.Errors) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Errors); i++ {
+		if swag.IsZero(o.Errors[i]) { // not required
+			continue
+		}
+
+		if o.Errors[i] != nil {
+			if err := o.Errors[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("upsertBusinessApplicationsCreated" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("upsertBusinessApplicationsCreated" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *UpsertBusinessApplicationsCreatedBody) validateMeta(formats strfmt.Registry) error {
+	if swag.IsZero(o.Meta) { // not required
+		return nil
+	}
+
+	if o.Meta != nil {
+		if err := o.Meta.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("upsertBusinessApplicationsCreated" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("upsertBusinessApplicationsCreated" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this upsert business applications created body based on the context it is used
+func (o *UpsertBusinessApplicationsCreatedBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateErrors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateMeta(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *UpsertBusinessApplicationsCreatedBody) contextValidateErrors(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Errors); i++ {
+
+		if o.Errors[i] != nil {
+
+			if swag.IsZero(o.Errors[i]) { // not required
+				return nil
+			}
+
+			if err := o.Errors[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("upsertBusinessApplicationsCreated" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("upsertBusinessApplicationsCreated" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *UpsertBusinessApplicationsCreatedBody) contextValidateMeta(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Meta != nil {
+
+		if swag.IsZero(o.Meta) { // not required
+			return nil
+		}
+
+		if err := o.Meta.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("upsertBusinessApplicationsCreated" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("upsertBusinessApplicationsCreated" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *UpsertBusinessApplicationsCreatedBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *UpsertBusinessApplicationsCreatedBody) UnmarshalBinary(b []byte) error {
+	var res UpsertBusinessApplicationsCreatedBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+UpsertBusinessApplicationsOKBody upsert business applications o k body
+swagger:model UpsertBusinessApplicationsOKBody
+*/
+type UpsertBusinessApplicationsOKBody struct {
+
+	// errors
+	Errors []*models.MsaAPIError `json:"errors"`
+
+	// meta
+	Meta *models.MsaMetaInfo `json:"meta,omitempty"`
+
+	// resources
+	Resources []interface{} `json:"resources"`
+}
+
+// Validate validates this upsert business applications o k body
+func (o *UpsertBusinessApplicationsOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateMeta(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *UpsertBusinessApplicationsOKBody) validateErrors(formats strfmt.Registry) error {
+	if swag.IsZero(o.Errors) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Errors); i++ {
+		if swag.IsZero(o.Errors[i]) { // not required
+			continue
+		}
+
+		if o.Errors[i] != nil {
+			if err := o.Errors[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("upsertBusinessApplicationsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("upsertBusinessApplicationsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *UpsertBusinessApplicationsOKBody) validateMeta(formats strfmt.Registry) error {
+	if swag.IsZero(o.Meta) { // not required
+		return nil
+	}
+
+	if o.Meta != nil {
+		if err := o.Meta.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("upsertBusinessApplicationsOK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("upsertBusinessApplicationsOK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this upsert business applications o k body based on the context it is used
+func (o *UpsertBusinessApplicationsOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateErrors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateMeta(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *UpsertBusinessApplicationsOKBody) contextValidateErrors(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Errors); i++ {
+
+		if o.Errors[i] != nil {
+
+			if swag.IsZero(o.Errors[i]) { // not required
+				return nil
+			}
+
+			if err := o.Errors[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("upsertBusinessApplicationsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("upsertBusinessApplicationsOK" + "." + "errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *UpsertBusinessApplicationsOKBody) contextValidateMeta(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Meta != nil {
+
+		if swag.IsZero(o.Meta) { // not required
+			return nil
+		}
+
+		if err := o.Meta.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("upsertBusinessApplicationsOK" + "." + "meta")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("upsertBusinessApplicationsOK" + "." + "meta")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *UpsertBusinessApplicationsOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *UpsertBusinessApplicationsOKBody) UnmarshalBinary(b []byte) error {
+	var res UpsertBusinessApplicationsOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
