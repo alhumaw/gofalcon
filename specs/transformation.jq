@@ -801,3 +801,25 @@
       "x-www-form-urlencoded": {"type": "object"}
     }
   }
+
+# Backfill the standard envelope for any 2xx success response that has no schema.
+| .paths |= map_values(
+    map_values(
+      if type == "object" and has("responses") then
+        .responses |= map_values(
+          if type == "object"
+             and (has("schema") | not)
+             and ((.description // "") | test("OK|Created|Accepted"; "i"))
+          then .schema = {
+                 "type": "object",
+                 "properties": {
+                   "meta":      {"$ref": "#/definitions/msa.MetaInfo"},
+                   "resources": {"type": "array", "items": {}},
+                   "errors":    {"type": "array", "items": {"$ref": "#/definitions/msa.APIError"}}
+                 }
+               }
+          else . end
+        )
+      else . end
+    )
+  )
